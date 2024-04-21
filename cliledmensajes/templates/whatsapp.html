@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cliled | Dashboard 2</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome Icons -->
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
+
+
+  <!-- overlayScrollbars -->
+  <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="https://skkwiw72.github.io/js/register-teme.css">
+
+</head>
+<body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+<div class="wrapper">
+
+  <!-- Preloader -->
+  <div class="preloader flex-column justify-content-center align-items-center">
+    <img class="animation__wobble" src="dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+  </div>
+
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-dark">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="/dashboard/" class="nav-link">Home</a>
+      </li>
+      
+    </ul>
+
+    <!-- Right navbar links -->
+<ul class="navbar-nav ml-auto">
+      <!-- Navbar Search -->
+      
+
+      
+      
+      
+    </ul>
+  </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+     <a href="/dashboard/" class="brand-link">
+      <img src="https://skkwiw72.github.io/js/zyro-image%20(1).png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+      <span class="brand-text font-weight-light">Cliled</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+       
+        <div class="info">
+          <a href="#" class="d-block">{{ username }}</a>
+        </div>
+      </div>
+
+      <!-- SidebarSearch Form -->
+      <div class="form-inline">
+        <div class="input-group" data-widget="sidebar-search">
+          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+          <div class="input-group-append">
+            <button class="btn btn-sidebar">
+              <i class="fas fa-search fa-fw"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          <li class="nav-item menu-open">
+            <a href="/dashboard/" class="nav-link active">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Dashboard
+                
+              </p>
+            </a>
+
+          </li>
+          
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="fas fa-video"></i>
+              <p>
+                ¿Cómo funciona?
+                <i class="fas fa-angle-left right"></i>
+                
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="/uso-mensajes/" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Cliled Mensajes</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/uso-contactos/" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Cliled Contactos</p>
+                </a>
+              </li>
+             
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a href="/licencia/" class="nav-link">
+              <i class="fas fa-shopping-cart"></i> 
+              <p>
+                Licencia
+                
+              </p>
+            </a>
+            
+
+           
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon far fa-envelope"></i>
+              <p>
+                Cliled Mensajes
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="/cliledmensajes/" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Email</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/CliledWhatsapp/" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Whatsapp</p>
+                </a>
+              </li>
+
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="fas fa-user-plus"></i>
+              <p>
+                Cliled Contactos
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="/contactoscliled/" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p> Contacto de Negocios</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/contactosInstagram/" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p> Contactos de Instagram</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/contactosPersonas/" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Contactos de Personas</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon far fa-envelope"></i>
+              <p>
+                Herramientas
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="/MailVerifier/" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Verificador de email</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/Office/" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Oficce</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/Numeros-calentamiento/" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Precalentamiento de Numeros</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/verificarspam/" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Verificador de spam</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/cliledplantillas/" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Creador de plantillas</p>
+                </a>
+
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a href="/Soporte/" class="nav-link">
+              <i class="fas fa-phone-alt"></i>
+              <p>
+                Soporte
+                
+              </p>
+            </a>
+            
+          </li>
+          
+          <li class="nav-item">
+            <a href="/precio-grupos/" class="nav-link">
+              <i class="fas fa-users"></i>
+              <p>
+                Precio a Grupos o Empresas
+                
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/ingresalicencia/" class="nav-link">
+              <i class="fas fa-id-badge"></i>
+              <p>
+                Ingresa tu Licencia
+                
+              </p>
+            </a>
+          </li>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Envio de Mensajes</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/dashboard/">Home</a></li>
+              <li class="breadcrumb-item active">Envio de Mensajes</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+  
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Your form goes here -->
+        <form method="POST" action="{% url 'envio_whatsapp' %} " enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="card">
+            <div class="card-body">
+              <div class="form-group">
+                <div class="container">
+                  <div class="row">
+                    <div class="col">
+
+
+                      
+                      <label for="exampleInputEmail1">Ingrese la ruta de los archivos adjuntos de imagen</label>
+                      <div class="custom-text">
+                          <input type="text" class="form-control" id="adjunto1" name="adjunto1" placeholder="C:\Users\Mipc\Desktop\uploads\documents\pescado.jpg">
+                          <label class="custom-text-label" for="imagen_cabecera">Archivo adjunto 1</label>
+                      </div>
+                      <div class="custom-text">
+                          <input type="text" class="form-control" id="adjunto2" name="adjunto2" placeholder="C:\Users\Mipc\Desktop\uploads\documents\pescado.jpg">
+                          <label class="custom-text-label" for="imagen_titular">Archivo adjunto 2</label>
+                      </div>
+                      <div class="custom-text">
+                          <input type="text" class="form-control" id="adjunto3" name="adjunto3" placeholder="C:\Users\Mipc\Desktop\uploads\documents\pescado.jpg">
+                          <label class="custom-text-label" for="imagen_otros">Archivo adjunto 3</label>
+                      </div>
+                      <div class="custom-text">
+                          <input type="text" class="form-control" id="adjunto4" name="adjunto4" placeholder="C:\Users\Mipc\Desktop\uploads\documents\pesca.mp4">
+                          <label class="custom-text-label" for="imagen_adicional">Archivo adjunto 4</label>
+                      </div>
+                  </div>
+                  
+                  <div class="col">
+                      <label for="exampleInputEmail1">Ingrese la ruta de los archivos adjuntos de cualquier formato</label>
+                      <div class="custom-text">
+                          <input type="text" class="form-control" id="adjunto1c" name="adjunto1c" placeholder="C:\Users\Mipc\Desktop\uploads\documents\pescado.jpg">
+                          <label class="custom-text-label" for="imagen_cabecera">Archivo adjunto 1</label>
+                      </div>
+                      <div class="custom-text">
+                          <input type="text" class="form-control" id="adjunto2c" name="adjunto2c" placeholder="C:\Users\Mipc\Desktop\uploads\documents\pescado.jpg">
+                          <label class="custom-text-label" for="imagen_titular">Archivo adjunto 2</label>
+                      </div>
+                      <div class="custom-text">
+                          <input type="text" class="form-control" id="adjunto3c" name="adjunto3c" placeholder="C:\Users\Mipc\Desktop\uploads\documents\pescado.jpg">
+                          <label class="custom-text-label" for="imagen_otros">Archivo adjunto 3</label>
+                      </div>
+                      <div class="custom-text">
+                          <input type="text" class="form-control" id="adjunto4c" name="adjunto4c" placeholder="C:\Users\Mipc\Desktop\uploads\documents\pescado.mp4">
+                          <label class="custom-text-label" for="imagen_adicional">Ruta de archivo de video</label>
+                      </div>
+                  
+                        <label for="exampleInputEmail1">Ingresa el nombre del contacto que desea adjuntar</label>
+                          <input type="text" class="form-control" id="contacto" name="contacto" placeholder="Inserta el nombre del contacto al que deseas adjuntar">
+                    </div>
+                  </div>
+                    
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                  <label for="exampleInputEmail1">Ingrese el nombre de la carpeta en donde se encuentran los archivos</label>
+                  <input type="text" class="form-control" id="carpeta" name="carpeta" placeholder="Imágenes,Documentos,Escritorio(Cuide el uso de acentos)">
+
+                      <div class="col">
+                          <label for="exampleInputFile">Ingrese un archivo xslx o txt con los numeros de telefono</label>
+                          <div class="input-group">
+                              <div class="custom-file">
+                                  <input type="file" class="custom-file-input" id="archivo_telefono" name="archivo_telefono">
+                                  <label class="custom-file-label" for="correos_archivo">Archivo de números de teléfono</label>
+                              </div>
+                          </div>
+                          <label for="exampleInputEmail1">Ingrese los números de teléfono separados por un espacio</label>
+                          <input type="text" class="form-control" id="numeros" name="numeros" placeholder="Ejemplo: 3346453636 66333353">
+                          <div class="main__input main__input--phone-number">
+                              <label for="countryCodeSelect">Código de país:</label>
+                              <select name="country_code" id="countryCodeSelect" onchange="updateCountryCode()">
+                                <option value="+1" selected>USA (+1)</option>
+                                <option value="+52">Mexico (+52)</option>
+                                <option value="+57">Colombia (+57)</option>
+                                <option value="+598">Uruguay (+598)</option>
+                                <option value="+54">Argentina (+54)</option>
+                                <option value="+55">Brasil (+55)</option>
+                                <option value="+56">Chile (+56)</option>
+                                <option value="+51">Perú (+51)</option>
+                                <option value="+593">Ecuador (+593)</option>
+                            </select>
+                            
+                          </div>
+                      </div>
+                      <div class="col">
+                          <label for="exampleInputEmail1">Ingresa el intervalo de tiempo entre cada mensaje en segundos</label>
+                          <input type="text" class="form-control" id="intervalowts" name="intervalowts" placeholder="Ejemplo: 10 (un mensaje se enviará cada 10 segundos)">
+                          <label for="exampleInputEmail1">Aleatorio: el intervalo de tiempo entre mensajes será aleatorio entre el rango que se especifique</label>
+                          <input type="text" class="form-control" id="aleatoriowts" name="aleatoriowts" placeholder="Ejemplo: 15-100 (el mensaje se enviará en algún segundo entre 15 y 100)">
+                          <label for="exampleInputEmail1">CliledSend : Ingresa el tiempo en minutos en el que quieres que se termine el envio </label>
+    <input type="number" class="form-control" id="cliledsendwts" name="cliledsendwts" placeholder="Si ingresas 200 el envio se culminara en 200 minutos">
+    <br>
+                      </div>
+                  </div>
+              </div>
+    <br>
+    <label for="exampleInputEmail1">Ingrese cuantas cuentas tiene de Whatsapp</label>
+    <input type="number" class="form-control" id="cuentas" name="cuentas" placeholder="Ingresa la cantidad de cuentas de Whatsapp que tiene"><br>             
+    
+    <label for="exampleInputEmail1">Ingrese el mensaje a enviar 1</label>
+    <input type="text" class="form-control" id="mensaje1" name="mensaje1" placeholder="¡Promoción imperdible! 2x1 en pizzas Todos los martes y miércoles de marzo. ¡No te lo pierdas!"><br>
+    
+    <label for="exampleInputEmail1">Ingrese el mensaje a enviar 2</label>
+    <input type="text" class="form-control" id="mensaje2" name="mensaje2" placeholder="¡Promoción imperdible! 2x1 en pizzas Todos los martes y miércoles de marzo. ¡No te lo pierdas!"><br>
+    
+    <label for="exampleInputEmail1">Ingrese el mensaje a enviar 3</label>
+    <input type="text" class="form-control" id="mensaje3" name="mensaje3" placeholder="¡Promoción imperdible! 2x1 en pizzas Todos los martes y miércoles de marzo. ¡No te lo pierdas!"><br>
+    
+    <div id="additional-messages" style="display: none;">
+      <label for="exampleInputEmail1">Ingrese el mensaje a enviar 4</label>
+      <input type="text" class="form-control" id="mensaje4" name="mensaje4" placeholder="¡Promoción imperdible! 2x1 en pizzas Todos los martes y miércoles de marzo. ¡No te lo pierdas!"><br>
+      
+      <label for="exampleInputEmail1">Ingrese el mensaje a enviar 5</label>
+      <input type="text" class="form-control" id="mensaje5" name="mensaje5" placeholder="¡Promoción imperdible! 2x1 en pizzas Todos los martes y miércoles de marzo. ¡No te lo pierdas!"><br>
+      
+      <label for="exampleInputEmail1">Ingrese el mensaje a enviar 6</label>
+      <input type="text" class="form-control" id="mensaje6" name="mensaje6" placeholder="¡Promoción imperdible! 2x1 en pizzas Todos los martes y miércoles de marzo. ¡No te lo pierdas!"><br>
+      
+      <label for="exampleInputEmail1">Ingrese el mensaje a enviar 7</label>
+      <input type="text" class="form-control" id="mensaje7" name="mensaje7" placeholder="¡Promoción imperdible! 2x1 en pizzas Todos los martes y miércoles de marzo. ¡No te lo pierdas!"><br>
+      
+      <label for="exampleInputEmail1">Ingrese el mensaje a enviar 8</label>
+      <input type="text" class="form-control" id="mensaje8" name="mensaje8" placeholder="¡Promoción imperdible! 2x1 en pizzas Todos los martes y miércoles de marzo. ¡No te lo pierdas!"><br>
+      
+      <label for="exampleInputEmail1">Ingrese el mensaje a enviar 9</label>
+      <input type="text" class="form-control" id="mensaje9" name="mensaje9" placeholder="¡Promoción imperdible! 2x1 en pizzas Todos los martes y miércoles de marzo. ¡No te lo pierdas!"><br>
+      
+      <label for="exampleInputEmail1">Ingrese el mensaje a enviar 10</label>
+      <input type="text" class="form-control" id="mensaje10" name="mensaje10" placeholder="¡Promoción imperdible! 2x1 en pizzas Todos los martes y miércoles de marzo. ¡No te lo pierdas!"><br>
+      <label for="exampleInputEmail1">Ingrese el mensaje a enviar 11</label>
+      <input type="text" class="form-control" id="mensaje11" name="mensaje11" placeholder="¡Promoción imperdible! 2x1 en pizzas Todos los martes y miércoles de marzo. ¡No te lo pierdas!"><br>
+      
+      <label for="exampleInputEmail1">Ingrese el mensaje a enviar 12</label>
+      <input type="text" class="form-control" id="mensaje12" name="mensaje12" placeholder="¡Promoción imperdible! 2x1 en pizzas Todos los martes y miércoles de marzo. ¡No te lo pierdas!"><br>
+      
+      <label for="exampleInputEmail1">Ingrese el mensaje a enviar 13</label>
+      <input type="text" class="form-control" id="mensaje13" name="mensaje13" placeholder="¡Promoción imperdible! 2x1 en pizzas Todos los martes y miércoles de marzo. ¡No te lo pierdas!"><br>
+      
+      <label for="exampleInputEmail1">Ingrese el mensaje a enviar 14</label>
+      <input type="text" class="form-control" id="mensaje14" name="mensaje14" placeholder="¡Promoción imperdible! 2x1 en pizzas Todos los martes y miércoles de marzo. ¡No te lo pierdas!"><br>
+      
+      <label for="exampleInputEmail1">Ingrese el mensaje a enviar 15</label>
+      <input type="text" class="form-control" id="mensaje15" name="mensaje15" placeholder="¡Promoción imperdible! 2x1 en pizzas Todos los martes y miércoles de marzo. ¡No te lo pierdas!"><br>
+      
+      <label for="exampleInputEmail1">Ingrese el mensaje a enviar 16</label>
+      <input type="text" class="form-control" id="mensaje16" name="mensaje16" placeholder="¡Promoción imperdible! 2x1 en pizzas Todos los martes y miércoles de marzo. ¡No te lo pierdas!"><br>
+      
+      <label for="exampleInputEmail1">Ingrese el mensaje a enviar 17</label>
+      <input type="text" class="form-control" id="mensaje17" name="mensaje17" placeholder="¡Promoción imperdible! 2x1 en pizzas Todos los martes y miércoles de marzo. ¡No te lo pierdas!"><br>
+      
+      <label for="exampleInputEmail1">Ingrese el mensaje a enviar 18</label>
+      <input type="text" class="form-control" id="mensaje18" name="mensaje18" placeholder="¡Promoción imperdible! 2x1 en pizzas Todos los martes y miércoles de marzo. ¡No te lo pierdas!"><br>
+      
+      <label for="exampleInputEmail1">Ingrese el mensaje a enviar 19</label>
+      <input type="text" class="form-control" id="mensaje19" name="mensaje19" placeholder="¡Promoción imperdible! 2x1 en pizzas Todos los martes y miércoles de marzo. ¡No te lo pierdas!"><br>
+      
+      <label for="exampleInputEmail1">Ingrese el mensaje a enviar 20</label>
+      <input type="text" class="form-control" id="mensaje20" name="mensaje20" placeholder="¡Promoción imperdible! 2x1 en pizzas Todos los martes y miércoles de marzo. ¡No te lo pierdas!"><br>
+      
+      <!-- Repite el mismo patrón para los mensajes restantes -->
+      
+    
+        <!-- Agrega más campos aquí según sea necesario -->
+    </div>
+    
+    <button type="button" onclick="toggleAdditionalMessages()">Agregar más plantillas de mensajes</button>
+    
+    <script>
+        function toggleAdditionalMessages() {
+            var additionalMessages = document.getElementById("additional-messages");
+            var button = document.querySelector('button[type="button"]');
+    
+            if (additionalMessages.style.display === "none") {
+                additionalMessages.style.display = "block";
+                button.textContent = "Ocultar plantillas de mensajes";
+            } else {
+                additionalMessages.style.display = "none";
+                button.textContent = "Agregar más plantillas de mensajes";
+            }
+        }
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+                
+              
+            </div><!-- /.card-body -->
+  
+            <div class="card-footer">
+              <button type="submit"  class="btn btn-primary">Submit</button>
+            </div>
+          </div><!-- /.card -->
+        </form>
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  
+    </div>
+  </div>
+</div>
+<aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+
+  <!-- Main Footer -->
+  <footer class="main-footer">
+    <strong>Cliled &copy; 2018-2024 .</strong>
+    Todos los derechos reservados
+    <div class="float-right d-none d-sm-inline-block">
+      
+    </div>
+  </footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+
+
+<!-- jQuery -->
+<script src="https://skkwiw72.github.io/js/jquery-3.7.1.min.js"></script>
+<!-- Bootstrap -->
+<script src="https://skkwiw72.github.io/js/boostrap.js"></script>
+<!-- overlayScrollbars -->
+<script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<!-- AdminLTE App -->
+<script src="https://skkwiw72.github.io/js/adminlite.js"></script>
+
+<!-- PAGE PLUGINS -->
+<!-- jQuery Mapael -->
+<script src="plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
+<script src="https://skkwiw72.github.io/js/bs-custom-file-input.min.js"></script>
+<script>
+  $(function () {
+    bsCustomFileInput.init();
+  });
+</script>
+
+
+</body>
+</html>

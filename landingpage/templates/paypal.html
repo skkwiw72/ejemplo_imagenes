@@ -1,0 +1,145 @@
+<body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  
+    <!-- Set up a container element for the button -->
+    <div id="paypal-button-container"></div>
+    
+    <script src="https://www.paypal.com/sdk/js?client-id=ARuX2BjmJudaKQVcVmi52Gj7nBKTMpzgjKp52GEeDCBF5yNidV11SWwGMcbuleE64LpaovSve70zvd8M"></script>
+    <div class="container">
+        <h1 class="text-center mt-5">Planes</h1>
+  
+        <div class="row mt-5">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h2 class="text-center">Plan Básico</h2>
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item"><a href="#basico-mes">Mes: $X</a></li>
+                <li class="list-group-item"><a href="#basico-tres-meses">Tres meses: $X</a></li>
+                <li class="list-group-item"><a href="#basico-seis-meses">Seis meses: $X</a></li>
+                <li class="list-group-item"><a href="#basico-doce-meses">Doce meses: $X</a></li>
+              </ul>
+            </div>
+          </div>
+    
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h2 class="text-center">Plan Premium</h2>
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item"><a href="#premium-mes">Mes: $X</a></li>
+                <li class="list-group-item"><a href="#premium-tres-meses">Tres meses: $X</a></li>
+                <li class="list-group-item"><a href="#premium-seis-meses">Seis meses: $X</a></li>
+                <li class="list-group-item"><a href="#premium-doce-meses">Doce meses: $X</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <script>
+        // Define your product prices
+        var productPrices = {
+            'basico-mes': '0.2',
+            'basico-tres-meses': '0.5',
+            // Add the rest of your products here
+        };
+    
+        // Set a default product
+        var currentProduct = 'basico-mes';
+    
+        // Update the current product when a link is clicked
+        var links = document.querySelectorAll('.list-group-item a');
+        links.forEach(function(link) {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                currentProduct = this.getAttribute('href').substring(1);
+                alert('Licencia seleccionada actualizada a: ' + currentProduct);
+            });
+        });
+    
+        // Render the PayPal button into #paypal-button-container
+        paypal.Buttons({
+    
+            // Call your server to set up the transaction
+            createOrder: function(data, actions) {
+                // Get the product price
+                var price = productPrices[currentProduct];
+    
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: price
+                        }
+                    }]
+                });
+            },
+    
+            // Call your server to finalize the transaction
+            onApprove: function(data, actions) {
+                // Envía una solicitud AJAX a la vista de Django
+                return $.ajax({
+                    url: '/enviarcorreopaypal/', // La URL de tu vista de Django
+                    type: 'POST',
+                    data: {
+                        'tiempodelicencia': currentProduct // Pasa el parámetro tiempodelicencia
+                    },
+                    success: function(response) {
+                        // Maneja la respuesta si es necesario
+                        alert('Correo enviado con éxito');
+                    },
+                    error: function(xhr, status, error) {
+                        // Maneja los errores si es necesario
+                        alert('Error al enviar el correo');
+                    }
+                }).then(function() {
+                    // Cuando se completa la solicitud AJAX, captura la transacción
+                    return actions.order.capture().then(function(details) {
+                        // Show a success message to the buyer
+                        alert('Transaction completed by ' + details.payer.name.given_name + '!');
+                    });
+                });
+            },
+    
+            // Handle errors
+            onError: function (err) {
+                // Show an error message to the buyer
+                console.error('Checkout error', err);
+                alert('Hubo un error al procesar la transacción. Por favor, inténtalo de nuevo.');
+            }
+    
+        }).render('#paypal-button-container');
+    </script>
+</body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

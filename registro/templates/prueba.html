@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verificación de código</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        .container {
+            max-width: 600px; /* Increased max-width for a larger container */
+            margin: 0 auto;
+            padding: 40px; /* Increased padding for more spacing */
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 24px; /* Increased font size for a larger heading */
+        }
+
+        p {
+            color: #666;
+            font-size: 18px; /* Increased font size for larger text */
+        }
+
+        .input-container {
+            margin-bottom: 20px; /* Increased margin-bottom for more spacing */
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px; /* Increased padding for larger input field */
+            font-size: 18px; /* Increased font size for larger input field */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn-container {
+            text-align: center;
+        }
+
+        button {
+            padding: 15px 30px; /* Increased padding for larger button */
+            font-size: 18px; /* Increased font size for larger button */
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Verificación de código</h1>
+        <p>Ingrese el código de verificación de 5 dígitos enviado a {{ mail }}:
+            <br>
+            <p>Si no lo encuentra busquelo en su carpeta de spam</p>
+        </p>
+        <form method="post" action="{% url 'verificar_codigo' %}">
+            {% csrf_token %}
+        <div class="input-container">
+            <input type="text" id="verificationCode" name="verificationCode" maxlength="6">
+        </div>
+        <div class="btn-container">
+            <button type="submit">Verificar</button>
+        </div>
+        </form>
+    </div>
+        
+
+    <script>
+        function verifyCode() {
+            var code = document.getElementById("verificationCode").value;
+            // Aquí puedes agregar la lógica para verificar el código ingresado
+            // por el usuario y realizar las acciones correspondientes.
+        }
+    </script>
+</body>
+</html>

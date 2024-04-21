@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario</title>
+    <link rel="stylesheet" href="./css/estilos.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600&display=swap" rel="stylesheet">
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <style>
+        /* ... tus estilos ... */
+        * {
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            min-height: 600px;
+            padding: 80px 0;
+            background-image: linear-gradient(to top, #a3bded 0%, #6991c7 100%);
+            background-color: #a3bded;
+            background-repeat: no-repeat;
+            display: flex;
+        }
+
+        .main {
+            margin: auto;
+            width: 90%;
+            max-width: 1000px;
+            background-image: linear-gradient(to left, rgba(255, 255, 255, 0.472), rgba(255, 255, 255, 0.365));
+            overflow: hidden;
+            padding: .7em;
+            border-radius: 1em;
+            display: grid;
+            grid-auto-rows: max-content;
+            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+            gap: .6em;
+            animation: mostrar 1.5s ease-in-out;
+        }
+
+        @keyframes mostrar {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .main__figure {
+            overflow: hidden;
+            border-radius: 1em;
+            background-color: #D798F8;
+            display: flex;
+        }
+
+        .main__img {
+            margin: auto;
+            width: 80%;
+            max-width: 60vw;
+        }
+
+        .main__contact {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 1.5em;
+            padding: 3em .7em;
+            text-align: center;
+        }
+
+        .main__form {
+            display: grid;
+            justify-items: center;
+            gap: 1.5em;
+        }
+
+        .main__input {
+            width: 80%;
+            max-width: 500px;
+            outline: none;
+            border: none;
+            padding: 1em;
+            font: inherit;
+            border-radius: .6em;
+            position: relative;
+        }
+
+        .main__input--send {
+            background-color: #DC3F31;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .main__title {
+            font-size: 2.3rem;
+        }
+
+        .main__paragraph {
+            margin: .3em 0;
+        }
+
+        .main__social {
+            display: grid;
+            grid-auto-flow: column;
+            justify-content: center;
+            grid-auto-columns: max-content;
+            gap: 1em;
+        }
+
+        .main__link {
+            border: 1px solid #fff;
+            border-radius: 10px;
+            padding: .6em 1.5em;
+        }
+
+        .main__link:hover {
+            background-color: #fff;
+        }
+
+        .main__icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        .main__input--country-code {
+            width: 100%; /* Ajusta el ancho según la distribución deseada */
+            max-width: 1000px;
+        }
+
+        .main__input--phone-number {
+            width: 100%;
+            max-width: 500px;
+            /* Otros estilos específicos para este input */
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="main">
+        <div class="main__contact">
+            <h2 class="main__title">Hola!</h2>
+            <p class="main__paragraph">¿Estás listo para formar parte de Cliled? Regístrate aquí.</p>
+
+            <form class="main__form" action="{% url 'verification' %}" method="post">
+                {% csrf_token %}
+                <label for="mail">Correo electronico:</label>
+                <input type="mail" id="mail" name="mail" placeholder="cliled@gmail.com">
+               
+                <div class="main__input">
+                    <label for="password">Contraseña:</label>
+                   <input type="password" id="password" name="password" placeholder="Contraseña">
+                    <span class="toggle-password" onclick="togglePasswordVisibility()">👁️</span>
+                </div>
+                <div class="main__input">
+                    <label for="password"> Confirma tu contraseña:</label>
+                    <input type="password" id="passwordconfirm" name="passwordconfirm" placeholder="Confirma tu contraseña">
+                    <span class="toggle-password" onclick="togglePasswordVisibility1()">👁️</span>
+                </div>
+                <a href="login.html" class="text-center">Ya tengo una cuenta</a>
+                <a href="{% url 'cambiar_contrasena' %}" class="text-center">Olvide mi contraseña</a>
+                <div id="passwordMismatchError" style="color: red; display: none;">
+                    Las contraseñas no coinciden. Por favor, inténtalo de nuevo.
+                </div>
+                
+                <div class="g-recaptcha" data-sitekey="6LdKu10pAAAAAGjyU2BIau5vhrk_rBGC3Ab141EZ"></div>
+                                <br/>
+                <input type="submit" value="Registrate" class="main__input main__input--send" id="submitButton">
+            </form>
+        </div>
+
+                <script>
+            function updateCountryCode() {
+                var countryCode = document.getElementById("countryCodeSelect").value;
+                document.getElementById("countryCode").value = countryCode;
+            }
+        
+            function togglePasswordVisibility() {
+                var passwordInput = document.getElementById("password");
+                passwordInput.type = (passwordInput.type === "password") ? "text" : "password";
+            }
+            
+            function togglePasswordVisibility1() {
+                var passwordInput = document.getElementById("passwordconfirm");
+                passwordInput.type = (passwordInput.type === "password") ? "text" : "password";
+            }
+            document.getElementById("submitButton").addEventListener("click", function (event) {
+        var countryCode = document.getElementById("countryCodeSelect").value;
+        var phoneNumber = document.getElementById("phoneNumber").value;
+
+        var password = document.getElementById("password").value;
+        var confirmPassword = document.getElementById("passwordconfirm").value;
+
+        // Validar que los campos no estén vacíos
+        if (countryCode.trim() === "" || phoneNumber.trim() === "" || password.trim() === "" || confirmPassword.trim() === "") {
+            alert("Todos los campos son obligatorios. Por favor, llénelos antes de enviar el formulario.");
+            event.preventDefault();
+            return;
+        }
+
+        // Combina el prefijo de país y el número de teléfono
+        var combinedNumber = countryCode + phoneNumber;
+        document.getElementById("phoneNumber").value = combinedNumber;
+        var phoneNumberPattern = /^(\+\d{1,3})?\d{10}$/;
+
+// Verificar si el número de teléfono tiene la sintaxis correcta
+        if (!phoneNumberPattern.test(combinedNumber)) {
+    // El formato del número de teléfono es incorrecto
+        alert("El formato del número de teléfono es incorrecto. Por favor, inténtalo de nuevo.");
+        document.getElementById("phoneNumber").value = "";
+        event.preventDefault();
+}
+
+        
+
+
+
+
+
+                var password = document.getElementById("password").value;
+                var confirmPassword = document.getElementById("passwordconfirm").value;
+
+        if (password !== confirmPassword) {
+            document.getElementById("passwordMismatchError").style.display = "block";
+                    event.preventDefault();  // Detiene el envío del formulario si las contraseñas no coinciden
+                } else {
+                    document.getElementById("passwordMismatchError").style.display = "none";
+        }
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("submitButton").addEventListener("click", function (event) {
+            // Realizar la verificación del reCAPTCHA antes de enviar el formulario
+            var recaptchaResponse = grecaptcha.getResponse();
+
+            if (recaptchaResponse === "") {
+                // El reCAPTCHA no se ha completado, muestra un mensaje de error y evita enviar el formulario
+                alert("Por favor, completa la verificación reCAPTCHA.");
+                event.preventDefault();
+                return;
+            }
+
+            // Agrega el valor del reCAPTCHA al formulario antes de enviarlo
+            var recaptchaInput = document.createElement("input");
+            recaptchaInput.type = "hidden";
+            recaptchaInput.name = "g-recaptcha-response";
+            recaptchaInput.value = recaptchaResponse;
+            document.forms[0].appendChild(recaptchaInput);
+        });
+    });
+</script>
+    </section>
+</body>
+
+</html>
+
