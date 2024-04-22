@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-%udo*7ofs+m)ad=0)96c#-(y$78co64l&mzc5$g0-^e)g_0&mm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['14d7-2806-2f0-5501-e93a-2465-6fa3-bb7e-65b9.ngrok-free.app','6e11-2806-2f0-5501-e93a-f9f6-1166-3dfe-f540.ngrok-free.app', 'https://b49f-2806-2f0-5501-e93a-d1fd-e4eb-9838-99fb.ngrok-free.app/CliledWhatsapp/resultado','b49f-2806-2f0-5501-e93a-d1fd-e4eb-9838-99fb.ngrok-free.app','127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['14d7-2806-2f0-5501-e93a-2465-6fa3-bb7e-65b9.ngrok-free.app','6e11-2806-2f0-5501-e93a-f9f6-1166-3dfe-f540.ngrok-free.app', 'https://b49f-2806-2f0-5501-e93a-d1fd-e4eb-9838-99fb.ngrok-free.app/CliledWhatsapp/resultado','b49f-2806-2f0-5501-e93a-d1fd-e4eb-9838-99fb.ngrok-free.app','127.0.0.1', 'localhost','.vercel.app']
 
 CORS_ORIGIN_WHITELIST = [
     'https://b49f-2806-2f0-5501-e93a-d1fd-e4eb-9838-99fb.ngrok-free.app',
