@@ -2,13 +2,14 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
-from .maps import main
+from .maps import maina
 from .instascraper import main
 from django.contrib.auth.decorators import login_required
 import re
 import smtplib
 import dns.resolver
 import pandas as pd
+from django.http import JsonResponse
 
 
 import os
@@ -17,8 +18,10 @@ import time
 import requests
 
 # Create your views here.
+@login_required
 def cliledpersonas(request):
     return render(request, 'cliledpersonas.html')
+@login_required
 def searchPersonas(request):
     return render(request, 'cliledpersonas.html')
 
@@ -30,7 +33,7 @@ def dashboard(request):
     mensajes_enviados = request.user.mensajes_enviados
     contacos_enviado = request.user.contacos_enviado
     return render(request, 'dashboard.html', {'username': username, 'tokens_contactos': tokens_contactos, 'tokens_mensajes': tokens_mensajes, 'mensajes_enviados': mensajes_enviados, 'contacos_enviado': contacos_enviado})
-
+@login_required
 def cliledcontactos(request):
     username = request.user.username
     tokens_contactos = request.user.tokens_contactos
@@ -43,9 +46,10 @@ def cliledcontactos(request):
 
 
 
-
+@login_required
 def cliledpersonas(request):
     return render(request, 'cliledpersonas.html')
+@login_required
 def cliledInstagram(request):
     username = request.user.username
     tokens_contactos = request.user.tokens_contactos
@@ -71,6 +75,10 @@ def cliledInstagram(request):
 @csrf_exempt
 def searchinsta(request):
     if request.method == 'POST':
+        token_contactos = request.user.tokens_contactos
+        plan = request.user.plan
+        if token_contactos <= 0:
+            return render(request, 'cliledinstagram.html', {'error': 'No tienes suficientes tokens para realizar esta acción'})
         cuenta = str(request.POST.get('cuenta'))
        
         total = int(request.POST.get('total'))
@@ -138,6 +146,31 @@ def searchinsta(request):
                 lista_url.append('')
                 listanumero.append('')
                 listamails.append('')
+                longitudnombreslen = len(lista_names)
+                if longitudnombreslen > 300:
+                    if plan == "a":
+
+
+                        mensaje = "La cuenta excede de 300 seguidores para conseguir los datos consigue una licencia  ."
+
+        
+                    
+                        return JsonResponse({'mensaje': mensaje})
+                if 100 <= longitudnombreslen <= 200:
+
+                    token_contactos = token_contactos -20 
+                    request.user.tokens_contactos = token_contactos
+                    request.user.save()
+                elif 1 <= longitudnombreslen <= 100:
+                        
+                    token_contactos = token_contactos -10 
+                    request.user.tokens_contactos = token_contactos
+                    request.user.save()
+            
+                        
+
+
+                
             
             
             
@@ -207,6 +240,20 @@ def searchinsta(request):
 @csrf_exempt
 def search(request):
     if request.method == 'POST':
+        token_contactos = request.user.tokens_contactos
+        total = int(request.POST.get('total'))
+        plan = request.user.plan
+        if token_contactos <= 0:
+            mensaje = "Aquí no es"
+            estado = 404  # Código de estado HTTP 404 para "No encontrado"
+            tipo_contenido = "text/plain"
+            print("No tienes suficientes tokens para realizar esta acción")
+            return HttpResponse(mensaje, status=estado, content_type=tipo_contenido)
+        
+        if plan == "a":
+            if total > 30:
+                return render(request, 'cliledcontactos.html', {'error': 'Tu plan no te permite buscar más de 50 contactos Adquiere una licencia para buscar más contactos'})
+
         tipo_de_negocio = str(request.POST.get('tipo_de_negocio'))
         pais = str(request.POST.get('pais'))
         estado_ciudad = str(request.POST.get('estado_ciudad'))
@@ -215,7 +262,10 @@ def search(request):
         search_for = tipo_de_negocio + " en  "+estado_ciudad +" "+pais 
 
         # Aquí puedes llamar a tu función main
-        resultados = main(search_for, total)
+        resultados = maina(search_for, total)
+        token_contactos = token_contactos - 10
+        request.user.tokens_contactos = token_contactos
+        request.user.save()
         print(resultados)
         # Pasa los resultados directamente a la plantilla
         return render(request, 'results.html', {'resultados': resultados})

@@ -6,7 +6,7 @@ import pandas as pd
 
 
 
-def main(search_for, total):
+def maina(search_for, total):
     l1=[]
     l2=[]
 
@@ -183,4 +183,4 @@ if __name__ == "__main__":
    
         total = 6
 
-        main(search_for, total)
+        maina(search_for, total)

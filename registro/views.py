@@ -10,6 +10,7 @@ from django.db import IntegrityError
 from django.contrib import messages
 from registro.models import Usuario
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -102,6 +103,45 @@ def generar_token_verificacion12meses(correo):
     # Retornar el token de verificación
     objeto =str(hash_md5[:12])
     return objeto
+def generar_token_verificacionmes_premium(correo):
+    # Clave secreta para mayor seguridad
+    secreto = "cliled1mesxdpremium"
+    correo =str(correo)
+
+    # Concatenar el correo electrónico y la clave secreta
+    mensaje = correo + secreto
+
+    # Calcular el hash MD5 del mensaje concatenado
+    hash_md5 = hashlib.md5(mensaje.encode()).hexdigest()
+
+    # Retornar el token de verificación
+    objeto =str(hash_md5[:12])
+    return objeto
+def generar_token_verificacion3meses_premium(correo):
+    secreto = "cliled3mesesxdpremium"
+    correo =str(correo)
+    mensaje = correo + secreto
+    hash_md5 = hashlib.md5(mensaje.encode()).hexdigest()
+    objeto =str(hash_md5[:12])
+    return objeto
+def generar_token_verificacion6meses_premium(correo):
+    secreto = "cliled6mesesxdpremium"
+    correo =str(correo)
+    mensaje = correo + secreto
+    hash_md5 = hashlib.md5(mensaje.encode()).hexdigest()
+    objeto =str(hash_md5[:12])
+    return objeto
+def generar_token_verificacion12meses_premium(correo):
+    secreto = "cliled12mesesxdpremium"
+    correo =str(correo)
+    mensaje = correo + secreto
+    hash_md5 = hashlib.md5(mensaje.encode()).hexdigest()
+    objeto =str(hash_md5[:12])
+    return objeto
+
+
+    
+    
 
 
 
@@ -126,6 +166,14 @@ def enviar_correo_paypal(request):
             token = request.user.licencia_6meses
         elif tiempodelicencia == "basico-12meses":
             token = request.user.licencia_12meses
+        elif tiempodelicencia == "premium-mes":
+            token = request.user.licencia_mes_premium
+        elif tiempodelicencia == "premium-3meses":
+            token = request.user.licencia_3meses_premium
+        elif tiempodelicencia == "premium-6meses":
+            token = request.user.licencia_6meses_premium
+        elif tiempodelicencia == "premium-12meses":
+            token = request.user.licencia_12meses_premium
         else:
             return HttpResponse('Licencia no valida')
      # Función para generar un token único
@@ -243,11 +291,15 @@ def verification(request):
                 token3meses = generar_token_verificacion3meses(correo)
                 token6meses = generar_token_verificacion6meses(correo)
                 token12meses = generar_token_verificacion12meses(correo)
+                tokenmespremium = generar_token_verificacionmes_premium(correo)
+                token3mesespremium = generar_token_verificacion3meses_premium(correo)
+                token6mesespremium = generar_token_verificacion6meses_premium(correo)
+                token12mesespremium = generar_token_verificacion12meses_premium(correo)
 
         
             
                 enviar_correo_verificacion(correo, token)
-                usuario = Usuario.objects.create(username=username, email=correo, token_verificacion=token, licencia_mes=tokenmes, licencia_3meses=token3meses, licencia_6meses=token6meses, licencia_12meses=token12meses)
+                usuario = Usuario.objects.create(username=username, email=correo, token_verificacion=token, licencia_mes=tokenmes, licencia_3meses=token3meses, licencia_6meses=token6meses, licencia_12meses=token12meses, licencia_mes_premium=tokenmespremium, licencia_3meses_premium=token3mesespremium, licencia_6meses_premium=token6mesespremium, licencia_12meses_premium=token12mesespremium)
                
                 usuario.set_password(contraseña)
                 usuario.save()

@@ -5,7 +5,7 @@ from .models import Contacto
 
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
-
+from django.contrib.auth.decorators import login_required
 
 def landing_page(request):
      return render(request, 'landing_page.html')
@@ -81,14 +81,19 @@ def quienes(request):
      return render(request, 'quienessomos.html')
 def comofunciona(request):
      return render(request, 'COMOFUNCIONA.html')
+@login_required
 def licencia(request):
      return render(request, 'licensias.html')
+@login_required
 def Office(request):
      return render(request, 'Oficce.html')
+@login_required
 def Soporte(request):
      return render(request, 'Soporte.html')
+@login_required
 def preciogrupos(request):
      return render(request, 'precio-grupos.html')
+@login_required
 def ingresalicencia(request):
      return render(request, 'ingresalicencia.html')
 @csrf_exempt
@@ -99,6 +104,10 @@ def procesarlicencia(request):
           tipo_de_licencia_3meses = request.user.licencia_3meses
           tipo_de_licencia_6meses = request.user.licencia_6meses
           tipo_de_licencia_12meses = request.user.licencia_12meses
+          tipo_de_licencia_mes_premium = request.user.licencia_mes_premium
+          tipo_de_licencia_3meses_premium = request.user.licencia_3meses_premium
+          tipo_de_licencia_6meses_premium = request.user.licencia_6meses_premium
+          tipo_de_licencia_12meses_premium = request.user.licencia_12meses_premium
           if licencia == tipo_de_licencia_mes:
                request.user.plan = 'b'
                request.user.tokens_contactos = 100000
@@ -123,14 +132,43 @@ def procesarlicencia(request):
                request.user.tokens_mensajes = 100000
                request.user.save()
                messages.success(request, '¡Licencia activada correctamente!')
+          elif licencia == tipo_de_licencia_mes_premium:
+               request.user.plan = 'e'
+               request.user.tokens_contactos = 100000
+               request.user.tokens_mensajes = 100000
+               request.user.save()
+               messages.success(request, '¡Licencia activada correctamente!')
+          elif licencia == tipo_de_licencia_3meses_premium:
+               request.user.plan = 'f'
+               request.user.tokens_contactos = 100000
+               request.user.tokens_mensajes = 100000
+               request.user.save()
+               messages.success(request, '¡Licencia activada correctamente!')
+          elif licencia == tipo_de_licencia_6meses_premium:
+               request.user.plan = 'g'
+               request.user.tokens_contactos = 100000
+               request.user.tokens_mensajes = 100000
+               request.user.save()
+               messages.success(request, '¡Licencia activada correctamente!')
+          elif licencia == tipo_de_licencia_12meses_premium:
+               request.user.plan = 'h'
+               request.user.tokens_contactos = 100000
+               request.user.tokens_mensajes = 100000
+               request.user.save()
+               messages.success(request, '¡Licencia activada correctamente!')
+          
+          
+
+                  
           else:
                messages.error(request, '¡Licencia incorrecta!')
      return redirect('dashboard')
           
 
-
+@login_required
 def usocontactos(request):
      return render(request, 'uso-contactos.html')
+@login_required
 def usomensajes(request):
      return render(request, 'uso-mensajes.html')
 

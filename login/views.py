@@ -13,6 +13,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 import hashlib
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 @csrf_exempt

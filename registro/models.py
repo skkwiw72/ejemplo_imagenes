@@ -26,6 +26,11 @@ class Usuario(AbstractUser):
     licencia_3meses = models.CharField(default=0)
     licencia_6meses = models.CharField(default=0)
     licencia_12meses = models.CharField(default=0)
+    licencia_mes_premium = models.CharField(default=0)
+    licencia_3meses_premium = models.CharField(default=0)
+    licencia_6meses_premium = models.CharField(default=0)
+    licencia_12meses_premium = models.CharField(default=0)
+    licencia_comprada = models.CharField(default=0)
 
 
 

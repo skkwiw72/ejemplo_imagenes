@@ -299,8 +299,26 @@
 
     <!-- Main content -->
     <div id="paypal-button-container"></div>
+    <p> Aprovecha un 15% de descuento haciendo transferencia directa .</p>
+          <p>Precio en dolares </p>
+          <p>Número CLABE: 638180010199118732
+            Número de cuenta: 01019911873
+            Nombre: Roberto Carlos Mendez Ortiz</p>
+          <p>Ponga en el motivo de transferencia su correo</p>
+          <p> En caso de que lo olvidara. Mandar su captura de la transacción a Soporte</p>
+          <a href="/Soporte/" class="btn btn-primary">Soporte</a>
+          <ul>
+            <li>Básico (1 mes): $4.95</li>
+            <li>Básico (3 meses): $8.95</li>
+            <li>Básico (6 meses): $13.95</li>
+            <li>Básico (12 meses): $19.45</li>
+            <li>Premium (1 mes): $9.45</li>
+            <li>Premium (3 meses): $14.40</li>
+            <li>Premium (6 meses): $21.45</li>
+            <li>Premium (12 meses): $30.45</li>
+        </ul>
     
-    <script src="https://www.paypal.com/sdk/js?client-id=ARuX2BjmJudaKQVcVmi52Gj7nBKTMpzgjKp52GEeDCBF5yNidV11SWwGMcbuleE64LpaovSve70zvd8M"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=AZU9tKvwua3uUk3ZSXBA_s85g_G50zHfIwoWHl5_KxWI_-yUQUIyOS7Bt8wBi82jhscfuBQ4MPQXcUok"></script>
     <div class="container">
         <h1 class="text-center mt-5">Planes</h1>
   
@@ -311,27 +329,30 @@
                 <h2 class="text-center">Plan Básico</h2>
               </div>
               <ul class="list-group list-group-flush">
-                <li class="list-group-item"><a href="#basico-mes">Mes: $X</a></li>
-                <li class="list-group-item"><a href="#basico-tres-meses">Tres meses: $X</a></li>
-                <li class="list-group-item"><a href="#basico-seis-meses">Seis meses: $X</a></li>
-                <li class="list-group-item"><a href="#basico-doce-meses">Doce meses: $X</a></li>
+                <li class="list-group-item"><a href="#basico-mes">Mes: $5.82</a></li>
+                <li class="list-group-item"><a href="#basico-tres-meses">Tres meses: $10.53</a></li>
+                <li class="list-group-item"><a href="#basico-seis-meses">Seis meses: $16.41</a></li>
+                <li class="list-group-item"><a href="#basico-doce-meses">Doce meses: $25.24</a></li>
               </ul>
             </div>
           </div>
-    
+        
           <div class="col-md-6">
             <div class="card">
               <div class="card-header">
                 <h2 class="text-center">Plan Premium</h2>
               </div>
               <ul class="list-group list-group-flush">
-                <li class="list-group-item"><a href="#premium-mes">Mes: $X</a></li>
-                <li class="list-group-item"><a href="#premium-tres-meses">Tres meses: $X</a></li>
-                <li class="list-group-item"><a href="#premium-seis-meses">Seis meses: $X</a></li>
-                <li class="list-group-item"><a href="#premium-doce-meses">Doce meses: $X</a></li>
+                <li class="list-group-item"><a href="#premium-mes">Mes: $11.12</a></li>
+                <li class="list-group-item"><a href="#premium-tres-meses">Tres meses: $16.94</a></li>
+                <li class="list-group-item"><a href="#premium-seis-meses">Seis meses: $25.24</a></li>
+                <li class="list-group-item"><a href="#premium-doce-meses">Doce meses: $38.18</a></li>
               </ul>
             </div>
+          
+            
           </div>
+          
         </div>
     </div>
     <!-- Optional JavaScript -->
@@ -339,10 +360,18 @@
     <script>
       // Define your product prices
       var productPrices = {
-          'basico-mes': '0.2',
-          'basico-tres-meses': '0.5',
-          // Add the rest of your products here
-      };
+            'basico-mes': '5.82',
+            'basico-tres-meses': '10.53',
+            'basico-seis-meses': '16.41',
+            'basico-doce-meses': '25.24',
+            'premium-mes': '11.12',
+            'premium-tres-meses': '16.94',
+            'premium-seis-meses': '25.24',
+            'premium-doce-meses': '38.18',
+
+
+            // Add the rest of your products here
+        };
   
       // Set a default product
       var currentProduct = 'basico-mes';

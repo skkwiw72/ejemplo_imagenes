@@ -2,10 +2,12 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from selenium.webdriver.chrome.service import Service
 import keyboard
+from django.contrib.auth.decorators import login_required
+import io
 
 # Create your views here.
 
-
+@login_required
 def mailsender(request):
     return render(request, 'mail_sender.html')
 from email.mime.image import MIMEImage
@@ -18,6 +20,14 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from smtplib import SMTP
 import os
+import io
+
+
+
+def html_to_text(file_html):
+    # Leer el contenido del archivo HTML como texto
+    html_text = file_html.read().decode("utf-8")  # Decodificar el contenido como texto UTF-8
+    return html_text
 
 def generar_numero_desde_texto(texto_rango):
     # Dividir el texto del rango en los límites inferior y superior
@@ -27,12 +37,6 @@ def generar_numero_desde_texto(texto_rango):
     # Generar y devolver un número aleatorio dentro del rango
     return random.randint(limite_inferior, limite_superior)
 
-def html_to_text(html_content):
-    # Crear un objeto BeautifulSoup a partir del contenido HTML
-    soup = BeautifulSoup(html_content, 'html.parser')
-    # Obtener el texto del documento HTML
-    text = soup.get_text()
-    return text
 
 def enviomail(request):
 
@@ -75,6 +79,7 @@ def enviomail(request):
             mensaje = str(request.POST.get(f'mensaje{i}'))
             codigo_html = str(request.POST.get(f'codigo_html{i}'))
             file_html = request.FILES.get(f'archivo_html{i}')
+           
             if file_html:
                 print(6)
                 textos_html = html_to_text(file_html)
@@ -134,12 +139,14 @@ def enviomail(request):
                 image_mime = MIMEImage(image.read(), _subtype=image_mime_type)
                 image_mime.add_header('Content-ID', '<header>')
                 mime_message.attach(image_mime)
+                image.seek(0)
             if image2:
                 image2_mime_type, _ = mimetypes.guess_type(image2.name)
                 
                 image2_mime = MIMEImage(image2.read(), _subtype=image2_mime_type)
                 image2_mime.add_header('Content-ID', '<title>')
                 mime_message.attach(image2_mime)
+                image2.seek(0)
 
 
                         
@@ -177,9 +184,9 @@ def enviomail(request):
                     tiempo_intervalo = tiempo_limite_segundos/cantidad_correos
                     tiempo_intervalo = tiempo_intervalo + numero_random
                     time.sleep(tiempo_intervalo)
-    resultados = pd.DataFrame( email_adresses, columns=['Correos Enviados'])
+    resultados = pd.DataFrame( email_adresses, columns=['Valid_Emails'])
     print(resultados)
-    return render(request, 'results2.html', {'resultados': resultados})
+    return render(request, 'results5.html', {'resultados': resultados})
 
 
 
@@ -235,7 +242,7 @@ def enviomail(request):
 
 
 
-
+@login_required
 def whatsapp(request):
     return render(request, 'whatsapp.html')
 
@@ -319,6 +326,10 @@ def envio_whatsapp(request):
     if request.method == 'POST':
         rutas_imagenes = []
         rutas_adjuntos = []
+        token_contactos = request.user.token_contactos
+        if token_contactos <= 0:
+            return render(request, 'whatsapp.html', {'error': 'No tienes suficientes tokens para realizar esta acción'})
+        
         
         # Obtenemos las rutas de las imágenes
         imagen1 = request.POST.get("adjunto1")
@@ -390,6 +401,8 @@ def envio_whatsapp(request):
                 
         
         numeros_amandar = int(len(numeros_lista))
+        request.user.token_contactos = request.user.token_contactos - numeros_amandar
+        request.user.save()
         numeros_amandar = numeros_amandar / cuentaswts
         sublistas = dividir_lista(numeros_lista,cuentaswts)
         print(sublistas)
@@ -416,64 +429,161 @@ def envio_whatsapp(request):
             drivers.append(driver)
 
 
-
-
+        rutas_imagenes = rutas_imagenes * 100
+        rutas_adjuntos = rutas_adjuntos * 100
+        primera_iteracion = True
+        lista_de_mensajes = lista_de_mensajes * 100
+        primera_iteracion2 = True
+        primera_iteracion3 = True
+        primera_iteracion4 = True
+        primera_iteracion5 = True
         for i in range(int(numeros_amandar)):
             for index, driver in enumerate(drivers, start=1):
                 print(f"Interactuando con el controlador {index}")
     # Aquí puedes realizar operaciones específicas para cada controlador
     # Por ejemplo, puedes realizar acciones diferentes dependiendo del índice del controlador
                 if index == 1:
-                    print("esperaning")
-                    time.sleep(60)
-                    print("funciona")
-                    botonnuevochar = WebDriverWait(driver, 1000).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, "._ajv7:nth-child(4) > ._ajv6 > span"))
-                    )
-                    botonnuevochar.click()
-                    time.sleep(2)
-                    primera_lista = sublistas[0]
-                    print(primera_lista)
-                    objeto = WebDriverWait(driver, 1000).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, ".\_ai07 .selectable-text"))
-                    )
+                    if primera_iteracion:
+
+                        print("esperando 60 segundos")
+                        time.sleep(60)
+                        print("buscando boton nuevo chat")
+                        botonnuevochar = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "._ajv7:nth-child(4) > ._ajv6 > span"))
+                        )
+                        botonnuevochar.click()
+                        time.sleep(2)
+                        primera_lista = sublistas[0]
+                        print(primera_lista)
+                        print("se mandaran a estos numeros")
+                        objeto = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, ".\_ai07 .selectable-text"))
+                        )
                     
-                    objeto.send_keys(primera_lista[i])
-                    print("corrco")
+                        objeto.send_keys(primera_lista[i])
+                        print("se mando a buscar el contacto")
 
                     
 
-                    nuevochat = WebDriverWait(driver, 1000).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, "._ak72:nth-child(2) > ._ak8l"))
-                    )
-                    nuevochat.click()
-                    time.sleep(2)
-                    print("porfinen fa")
-                    keyboard.write("Imágenes")
-                    keyboard.write("Imágenes")
-                    keyboard.send("enter")
+                        nuevochat = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "._ak72:nth-child(2) > ._ak8l"))
+                        )
+                        nuevochat.click()
+                        time.sleep(2)
+                        print("se enconbtro el contacto y se dio click e el")
+                        parent_element = WebDriverWait(driver, 100).until(
+                            EC.presence_of_element_located((By.CSS_SELECTOR, "._ak1o ._ajv6"))
+                            )
+                        parent_element.click()
+                        elementos = driver.find_elements(By.XPATH, "//div[contains(@class, 'x1i64zmx') and contains(@class, 'x1emribx')]")
+                        if len(elementos) >= 2:
+                                print("jijijijaja")
+                                if len(rutas_adjuntos) > 0:
+
+                        #este es el elemento de imagenes y videos
+                                    elementos[0].click()
+                                    print("se dio click en el elemento de imagenes")
+                                    keyboard.write(carpeta)
+                                    time.sleep(1)
+                                    keyboard.send("enter")  
+                                    ruta_archivo = rutas_adjuntos[0+i]  # Cambia esto con la ruta de tu archivo
+                                    keyboard.write(ruta_archivo)
+                                    time.sleep(1)
+                                    keyboard.send("enter")
+                                    time.sleep(2)
+                                    mensaje = lista_de_mensajes[0+i]
+                                    keyboard.write(mensaje)
+                                    keyboard.send("enter")
+                                else:
+                                    elementos[1].click()
+                                    print("se dio click en el elemento de imagenes")
+                                    time.sleep(2)
+                                    print("creo que aqui esta el error")
+                                    keyboard.write(carpeta)
+                                    time.sleep(1)
+                                    keyboard.send("enter")  
+                                    ruta_archivo = rutas_imagenes[0+i]   # Cambia esto con la ruta de tu archivo
+                                    keyboard.write(ruta_archivo)
+                                    time.sleep(1)
+                                    keyboard.send("enter")
+                                    time.sleep(2)
+                                    mensaje = lista_de_mensajes[0+i]
+                                    keyboard.write(mensaje)
+                                    keyboard.send("enter")
+                                    primera_iteracion = False
+                    else:
+                        print("esperando 5 segundos")
+                        time.sleep(5)
+                        print("buscando boton nuevo chat")
+                        botonnuevochar = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "._ajv7:nth-child(4) > ._ajv6 > span"))
+                        )
+                        botonnuevochar.click()
+                        time.sleep(2)
+                        primera_lista = sublistas[0]
+                        print(primera_lista)
+                        print("se mandaran a estos numeros")
+                        objeto = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, ".\_ai07 .selectable-text"))
+                        )
+                        
+                        objeto.send_keys(primera_lista[i])
+                        print("se mando a buscar el contacto")
+
+                    
+
+                        nuevochat = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "._ak72:nth-child(2) > ._ak8l"))
+                        )
+                        nuevochat.click()
+                        time.sleep(2)
+                        print("se enconbtro el contacto y se dio click e el")
+                        parent_element = WebDriverWait(driver, 100).until(
+                            EC.presence_of_element_located((By.CSS_SELECTOR, "._ak1o ._ajv6"))
+                            )
+                        parent_element.click()
+                        elementos = driver.find_elements(By.XPATH, "//div[contains(@class, 'x1i64zmx') and contains(@class, 'x1emribx')]")
+                        if len(elementos) >= 2:
+                                print("jijijijaja")
+                                if len(rutas_adjuntos) > 0:
+
+                            #este es el elemento de imagenes y videos
+                                    elementos[0].click()
+                                    print("se dio click en el elemento de imagenes")
+                                    keyboard.write(carpeta)
+                                    time.sleep(1)
+                                    keyboard.send("enter")  
+                                    ruta_archivo = rutas_adjuntos[0+i]  # Cambia esto con la ruta de tu archivo
+                                    keyboard.write(ruta_archivo)
+                                    time.sleep(1)
+                                    keyboard.send("enter")
+                                    time.sleep(2)
+                                    mensaje = lista_de_mensajes[0+i]
+                                    keyboard.write(mensaje)
+                                    keyboard.send("enter")
+                                else:
+                                    elementos[1].click()
+                                    print("se dio click en el elemento de imagenes")
+                                    keyboard.write(carpeta)
+                                    time.sleep(1)
+                                    keyboard.send("enter")  
+                                    ruta_archivo = rutas_imagenes[0+i]   # Cambia esto con la ruta de tu archivo
+                                    keyboard.write(ruta_archivo)
+                                    time.sleep(1)
+                                    keyboard.send("enter")
+                                    time.sleep(2)
+                                    mensaje = lista_de_mensajes[0+i]
+                                    keyboard.write(mensaje)
+                                    keyboard.send("enter")
+
+
+                    
                     
                    
                     
-                    print("porfinaaaaaaa")
+                    
 
-                    if len(rutas_imagenes) > 0:
-                    #boton de imagen 
-                        parent_element = WebDriverWait(driver, 100).until(
-                        EC.presence_of_element_located((By.CSS_SELECTOR, "._ak1o ._ajv6"))
-                        )
-                        parent_element.click()
-                        elementos = driver.find_elements(By.XPATH, "//div[contains(@class, 'x1i64zmx') and contains(@class, 'x1emribx')]")
-                        if len(elementos) >= 2:
-                            #este es el elemento de imagenes y videos
-                            elementos[2].click()
-                            keyboard.write(carpeta)
-                            keyboard.send("enter")  
-                            ruta_archivo = rutas_imagenes[0]  # Cambia esto con la ruta de tu archivo
-                            keyboard.write(ruta_archivo)
-                            keyboard.send("enter")
-                            time.sleep(2)
-                            keyboard.send("enter")
+                   
 
 
 
@@ -489,23 +599,7 @@ def envio_whatsapp(request):
 
 
 
-                    if len(rutas_adjuntos) > 0:
-                    #boton de imagen 
-                        parent_element = WebDriverWait(driver, 100).until(
-                        EC.presence_of_element_located((By.CSS_SELECTOR, "._ak1o ._ajv6"))
-                        )
-                        parent_element.click()
-                        elementos = driver.find_elements(By.XPATH, "//div[contains(@class, 'x1i64zmx') and contains(@class, 'x1emribx')]")
-                        if len(elementos) >= 2:
-                            #este es el elemento de imagenes y videos
-                            elementos[2].click()
-                            keyboard.write(carpeta)
-                            keyboard.send("enter")  
-                            ruta_archivo = rutas_imagenes[0]  # Cambia esto con la ruta de tu archivo
-                            keyboard.write(ruta_archivo)
-                            keyboard.send("enter")
-                            time.sleep(2)
-                            keyboard.send("enter")
+                 
 
                    
                        
@@ -537,181 +631,547 @@ def envio_whatsapp(request):
 
         # Aquí puedes realizar las acciones específicas para el primer controlador
                 elif index == 2:
-                    print("controlador2")
-                    
-                    elemento = WebDriverWait(driver, 1000).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, "._3ndVb.fbgy3m38.ft2m32mm.oq31bsqd.nu34rnf1[title='Nuevo chat']"))
-                    )
-                    print("Este es el primer controlador")
-                    time.sleep(1)
-                    elemento.click()
-                    time.sleep(5)
-                    campo_texto = WebDriverWait(driver, 1000).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, ".selectable-text.copyable-text.iq0m558w.g0rxnol2"))
-                    )
-                    texto_a_ingresar = sublistas[1[i]]
-                    campo_texto.send_keys(texto_a_ingresar)
-                    print(923984)
-                    elemento = WebDriverWait(driver, 1000).until(
-                    EC.element_to_be_clickable((By.CSS_SELECTOR, "._21S-L > .cw3vfol9"))
-                    )
-                    elemento.click()
+                    if primera_iteracion2:
 
-                
-                
-                
-                    print("porfin")
-                
-                
-                
-                    mensaje_a_enviar = WebDriverWait(driver, 1000).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, "._3Uu1_"))
-                    )
-                    texto = lista_de_mensajes[i+2]
-                    print("polisha")
-                    mensaje_a_enviar.send_keys(texto)
-                    botonenviar = WebDriverWait(driver, 1000).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, "._3XKXx"))
-                    )
-                    botonenviar.click()
+                        print("esperando 60 segundos")
+                        time.sleep(60)
+                        print("buscando boton nuevo chat")
+                        botonnuevochar = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "._ajv7:nth-child(4) > ._ajv6 > span"))
+                        )
+                        botonnuevochar.click()
+                        time.sleep(2)
+                        primera_lista = sublistas[1]
+                        print(primera_lista)
+                        print("se mandaran a estos numeros")
+                        objeto = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, ".\_ai07 .selectable-text"))
+                        )
+                    
+                        objeto.send_keys(primera_lista[i])
+                        print("se mando a buscar el contacto")
+
+                    
+
+                        nuevochat = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "._ak72:nth-child(2) > ._ak8l"))
+                        )
+                        nuevochat.click()
+                        time.sleep(2)
+                        print("se enconbtro el contacto y se dio click e el")
+                        parent_element = WebDriverWait(driver, 100).until(
+                            EC.presence_of_element_located((By.CSS_SELECTOR, "._ak1o ._ajv6"))
+                            )
+                        parent_element.click()
+                        elementos = driver.find_elements(By.XPATH, "//div[contains(@class, 'x1i64zmx') and contains(@class, 'x1emribx')]")
+                        if len(elementos) >= 2:
+                                print("jijijijaja")
+                                if len(rutas_adjuntos) > 0:
+
+                        #este es el elemento de imagenes y videos
+                                    elementos[0].click()
+                                    print("se dio click en el elemento de imagenes")
+                                    keyboard.write(carpeta)
+                                    time.sleep(1)
+                                    keyboard.send("enter")  
+                                    ruta_archivo = rutas_adjuntos[0+i]  # Cambia esto con la ruta de tu archivo
+                                    keyboard.write(ruta_archivo)
+                                    time.sleep(1)
+                                    keyboard.send("enter")
+                                    time.sleep(2)
+                                    mensaje = lista_de_mensajes[0+i]
+                                    keyboard.write(mensaje)
+                                    keyboard.send("enter")
+                                else:
+                                    elementos[1].click()
+                                    print("se dio click en el elemento de imagenes")
+                                    time.sleep(2)
+                                    print("creo que aqui esta el error")
+                                    keyboard.write(carpeta)
+                                    time.sleep(1)
+                                    keyboard.send("enter")  
+                                    ruta_archivo = rutas_imagenes[0+i]   # Cambia esto con la ruta de tu archivo
+                                    keyboard.write(ruta_archivo)
+                                    time.sleep(1)
+                                    keyboard.send("enter")
+                                    time.sleep(2)
+                                    mensaje = lista_de_mensajes[0+i]
+                                    keyboard.write(mensaje)
+                                    keyboard.send("enter")
+                                    primera_iteracion2 = False
+                    else:
+                        print("esperando 5 segundos")
+                        time.sleep(5)
+                        print("buscando boton nuevo chat")
+                        botonnuevochar = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "._ajv7:nth-child(4) > ._ajv6 > span"))
+                        )
+                        botonnuevochar.click()
+                        time.sleep(2)
+                        primera_lista = sublistas[1]
+                        print(primera_lista)
+                        print("se mandaran a estos numeros")
+                        objeto = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, ".\_ai07 .selectable-text"))
+                        )
+                        
+                        objeto.send_keys(primera_lista[i])
+                        print("se mando a buscar el contacto")
+
+                    
+
+                        nuevochat = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "._ak72:nth-child(2) > ._ak8l"))
+                        )
+                        nuevochat.click()
+                        time.sleep(2)
+                        print("se enconbtro el contacto y se dio click e el")
+                        parent_element = WebDriverWait(driver, 100).until(
+                            EC.presence_of_element_located((By.CSS_SELECTOR, "._ak1o ._ajv6"))
+                            )
+                        parent_element.click()
+                        elementos = driver.find_elements(By.XPATH, "//div[contains(@class, 'x1i64zmx') and contains(@class, 'x1emribx')]")
+                        if len(elementos) >= 2:
+                                print("jijijijaja")
+                                if len(rutas_adjuntos) > 0:
+
+                            #este es el elemento de imagenes y videos
+                                    elementos[0].click()
+                                    print("se dio click en el elemento de imagenes")
+                                    keyboard.write(carpeta)
+                                    time.sleep(1)
+                                    keyboard.send("enter")  
+                                    ruta_archivo = rutas_adjuntos[0+i]  # Cambia esto con la ruta de tu archivo
+                                    keyboard.write(ruta_archivo)
+                                    time.sleep(1)
+                                    keyboard.send("enter")
+                                    time.sleep(2)
+                                    mensaje = lista_de_mensajes[0+i]
+                                    keyboard.write(mensaje)
+                                    keyboard.send("enter")
+                                else:
+                                    elementos[1].click()
+                                    print("se dio click en el elemento de imagenes")
+                                    keyboard.write(carpeta)
+                                    time.sleep(1)
+                                    keyboard.send("enter")  
+                                    ruta_archivo = rutas_imagenes[0+i]   # Cambia esto con la ruta de tu archivo
+                                    keyboard.write(ruta_archivo)
+                                    time.sleep(1)
+                                    keyboard.send("enter")
+                                    time.sleep(2)
+                                    mensaje = lista_de_mensajes[0+i]
+                                    keyboard.write(mensaje)
+                                    keyboard.send("enter")
         # Aquí puedes realizar las acciones específicas para el segundo controlador
                 elif index == 3:
                     
-                    elemento = WebDriverWait(driver, 1000).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, "._3ndVb.fbgy3m38.ft2m32mm.oq31bsqd.nu34rnf1[title='Nuevo chat']"))
-                    )
-                    print("Este es el primer controlador")
-                    time.sleep(1)
-                    elemento.click()
-                    time.sleep(5)
-                    campo_texto = WebDriverWait(driver, 1000).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, ".selectable-text.copyable-text.iq0m558w.g0rxnol2"))
-                    )
-                    texto_a_ingresar = sublistas[2[i]]
-                    campo_texto.send_keys(texto_a_ingresar)
-                    print(923984)
-                    elemento = WebDriverWait(driver, 1000).until(
-                    EC.element_to_be_clickable((By.CSS_SELECTOR, "._21S-L > .cw3vfol9"))
-                    )
-                    elemento.click()
+                    if primera_iteracion3:
 
-                
-                
-                
-                    print("porfin")
-                
-                
-                
-                    mensaje_a_enviar = WebDriverWait(driver, 1000).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, "._3Uu1_"))
-                    )
-                    texto = lista_de_mensajes[i+3]
-                    print("polisha")
-                    mensaje_a_enviar.send_keys(texto)
-                    botonenviar = WebDriverWait(driver, 1000).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, "._3XKXx"))
-                    )
-                    botonenviar.click()
+                        print("esperando 60 segundos")
+                        time.sleep(60)
+                        print("buscando boton nuevo chat")
+                        botonnuevochar = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "._ajv7:nth-child(4) > ._ajv6 > span"))
+                        )
+                        botonnuevochar.click()
+                        time.sleep(2)
+                        primera_lista = sublistas[2]
+                        print(primera_lista)
+                        print("se mandaran a estos numeros")
+                        objeto = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, ".\_ai07 .selectable-text"))
+                        )
+                    
+                        objeto.send_keys(primera_lista[i])
+                        print("se mando a buscar el contacto")
+
+                    
+
+                        nuevochat = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "._ak72:nth-child(2) > ._ak8l"))
+                        )
+                        nuevochat.click()
+                        time.sleep(2)
+                        print("se enconbtro el contacto y se dio click e el")
+                        parent_element = WebDriverWait(driver, 100).until(
+                            EC.presence_of_element_located((By.CSS_SELECTOR, "._ak1o ._ajv6"))
+                            )
+                        parent_element.click()
+                        elementos = driver.find_elements(By.XPATH, "//div[contains(@class, 'x1i64zmx') and contains(@class, 'x1emribx')]")
+                        if len(elementos) >= 2:
+                                print("jijijijaja")
+                                if len(rutas_adjuntos) > 0:
+
+                        #este es el elemento de imagenes y videos
+                                    elementos[0].click()
+                                    print("se dio click en el elemento de imagenes")
+                                    keyboard.write(carpeta)
+                                    time.sleep(1)
+                                    keyboard.send("enter")  
+                                    ruta_archivo = rutas_adjuntos[0+i]  # Cambia esto con la ruta de tu archivo
+                                    keyboard.write(ruta_archivo)
+                                    time.sleep(1)
+                                    keyboard.send("enter")
+                                    time.sleep(2)
+                                    mensaje = lista_de_mensajes[0+i]
+                                    keyboard.write(mensaje)
+                                    keyboard.send("enter")
+                                else:
+                                    elementos[1].click()
+                                    print("se dio click en el elemento de imagenes")
+                                    time.sleep(2)
+                                    print("creo que aqui esta el error")
+                                    keyboard.write(carpeta)
+                                    time.sleep(1)
+                                    keyboard.send("enter")  
+                                    ruta_archivo = rutas_imagenes[0+i]   # Cambia esto con la ruta de tu archivo
+                                    keyboard.write(ruta_archivo)
+                                    time.sleep(1)
+                                    keyboard.send("enter")
+                                    time.sleep(2)
+                                    mensaje = lista_de_mensajes[0+i]
+                                    keyboard.write(mensaje)
+                                    keyboard.send("enter")
+                                    primera_iteracion3 = False
+                    else:
+                        print("esperando 5 segundos")
+                        time.sleep(5)
+                        print("buscando boton nuevo chat")
+                        botonnuevochar = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "._ajv7:nth-child(4) > ._ajv6 > span"))
+                        )
+                        botonnuevochar.click()
+                        time.sleep(2)
+                        primera_lista = sublistas[2]
+                        print(primera_lista)
+                        print("se mandaran a estos numeros")
+                        objeto = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, ".\_ai07 .selectable-text"))
+                        )
+                        
+                        objeto.send_keys(primera_lista[i])
+                        print("se mando a buscar el contacto")
+
+                    
+
+                        nuevochat = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "._ak72:nth-child(2) > ._ak8l"))
+                        )
+                        nuevochat.click()
+                        time.sleep(2)
+                        print("se enconbtro el contacto y se dio click e el")
+                        parent_element = WebDriverWait(driver, 100).until(
+                            EC.presence_of_element_located((By.CSS_SELECTOR, "._ak1o ._ajv6"))
+                            )
+                        parent_element.click()
+                        elementos = driver.find_elements(By.XPATH, "//div[contains(@class, 'x1i64zmx') and contains(@class, 'x1emribx')]")
+                        if len(elementos) >= 2:
+                                print("jijijijaja")
+                                if len(rutas_adjuntos) > 0:
+
+                            #este es el elemento de imagenes y videos
+                                    elementos[0].click()
+                                    print("se dio click en el elemento de imagenes")
+                                    keyboard.write(carpeta)
+                                    time.sleep(1)
+                                    keyboard.send("enter")  
+                                    ruta_archivo = rutas_adjuntos[0+i]  # Cambia esto con la ruta de tu archivo
+                                    keyboard.write(ruta_archivo)
+                                    time.sleep(1)
+                                    keyboard.send("enter")
+                                    time.sleep(2)
+                                    mensaje = lista_de_mensajes[0+i]
+                                    keyboard.write(mensaje)
+                                    keyboard.send("enter")
+                                else:
+                                    elementos[1].click()
+                                    print("se dio click en el elemento de imagenes")
+                                    keyboard.write(carpeta)
+                                    time.sleep(1)
+                                    keyboard.send("enter")  
+                                    ruta_archivo = rutas_imagenes[0+i]   # Cambia esto con la ruta de tu archivo
+                                    keyboard.write(ruta_archivo)
+                                    time.sleep(1)
+                                    keyboard.send("enter")
+                                    time.sleep(2)
+                                    mensaje = lista_de_mensajes[0+i]
+                                    keyboard.write(mensaje)
+                                    keyboard.send("enter")
                 elif index ==4:
                     
                     
                     
-                    
-                    elemento = WebDriverWait(driver, 1000).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, "._3ndVb.fbgy3m38.ft2m32mm.oq31bsqd.nu34rnf1[title='Nuevo chat']"))
-                    )
-                    print("Este es el primer controlador")
-                    time.sleep(1)
-                    elemento.click()
-                    time.sleep(5)
-                    campo_texto = WebDriverWait(driver, 1000).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, ".selectable-text.copyable-text.iq0m558w.g0rxnol2"))
-                    )
-                    texto_a_ingresar = sublistas[3[i]]
-                    campo_texto.send_keys(texto_a_ingresar)
-                    print(923984)
-                    elemento = WebDriverWait(driver, 1000).until(
-                    EC.element_to_be_clickable((By.CSS_SELECTOR, "._21S-L > .cw3vfol9"))
-                    )
-                    elemento.click()
+                    if primera_iteracion4:
 
-                
-                
-                
-                    print("porfin")
-                
-                
-                
-                    mensaje_a_enviar = WebDriverWait(driver, 1000).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, "._3Uu1_"))
-                    )
-                    texto = lista_de_mensajes[i+4]
-                    print("polisha")
-                    mensaje_a_enviar.send_keys(texto)
-                    botonenviar = WebDriverWait(driver, 1000).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, "._3XKXx"))
-                    )
-                    botonenviar.click()
+                        print("esperando 60 segundos")
+                        time.sleep(60)
+                        print("buscando boton nuevo chat")
+                        botonnuevochar = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "._ajv7:nth-child(4) > ._ajv6 > span"))
+                        )
+                        botonnuevochar.click()
+                        time.sleep(2)
+                        primera_lista = sublistas[3]
+                        print(primera_lista)
+                        print("se mandaran a estos numeros")
+                        objeto = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, ".\_ai07 .selectable-text"))
+                        )
                     
+                        objeto.send_keys(primera_lista[i])
+                        print("se mando a buscar el contacto")
+
+                    
+
+                        nuevochat = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "._ak72:nth-child(2) > ._ak8l"))
+                        )
+                        nuevochat.click()
+                        time.sleep(2)
+                        print("se enconbtro el contacto y se dio click e el")
+                        parent_element = WebDriverWait(driver, 100).until(
+                            EC.presence_of_element_located((By.CSS_SELECTOR, "._ak1o ._ajv6"))
+                            )
+                        parent_element.click()
+                        elementos = driver.find_elements(By.XPATH, "//div[contains(@class, 'x1i64zmx') and contains(@class, 'x1emribx')]")
+                        if len(elementos) >= 2:
+                                print("jijijijaja")
+                                if len(rutas_adjuntos) > 0:
+
+                        #este es el elemento de imagenes y videos
+                                    elementos[0].click()
+                                    print("se dio click en el elemento de imagenes")
+                                    keyboard.write(carpeta)
+                                    time.sleep(1)
+                                    keyboard.send("enter")  
+                                    ruta_archivo = rutas_adjuntos[0+i]  # Cambia esto con la ruta de tu archivo
+                                    keyboard.write(ruta_archivo)
+                                    time.sleep(1)
+                                    keyboard.send("enter")
+                                    time.sleep(2)
+                                    mensaje = lista_de_mensajes[0+i]
+                                    keyboard.write(mensaje)
+                                    keyboard.send("enter")
+                                else:
+                                    elementos[1].click()
+                                    print("se dio click en el elemento de imagenes")
+                                    time.sleep(2)
+                                    print("creo que aqui esta el error")
+                                    keyboard.write(carpeta)
+                                    time.sleep(1)
+                                    keyboard.send("enter")  
+                                    ruta_archivo = rutas_imagenes[0+i]   # Cambia esto con la ruta de tu archivo
+                                    keyboard.write(ruta_archivo)
+                                    time.sleep(1)
+                                    keyboard.send("enter")
+                                    time.sleep(2)
+                                    mensaje = lista_de_mensajes[0+i]
+                                    keyboard.write(mensaje)
+                                    keyboard.send("enter")
+                                    primera_iteracion4 = False
+                    else:
+                        print("esperando 5 segundos")
+                        time.sleep(5)
+                        print("buscando boton nuevo chat")
+                        botonnuevochar = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "._ajv7:nth-child(4) > ._ajv6 > span"))
+                        )
+                        botonnuevochar.click()
+                        time.sleep(2)
+                        primera_lista = sublistas[3]
+                        print(primera_lista)
+                        print("se mandaran a estos numeros")
+                        objeto = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, ".\_ai07 .selectable-text"))
+                        )
+                        
+                        objeto.send_keys(primera_lista[i])
+                        print("se mando a buscar el contacto")
+
+                    
+
+                        nuevochat = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "._ak72:nth-child(2) > ._ak8l"))
+                        )
+                        nuevochat.click()
+                        time.sleep(2)
+                        print("se enconbtro el contacto y se dio click e el")
+                        parent_element = WebDriverWait(driver, 100).until(
+                            EC.presence_of_element_located((By.CSS_SELECTOR, "._ak1o ._ajv6"))
+                            )
+                        parent_element.click()
+                        elementos = driver.find_elements(By.XPATH, "//div[contains(@class, 'x1i64zmx') and contains(@class, 'x1emribx')]")
+                        if len(elementos) >= 2:
+                                print("jijijijaja")
+                                if len(rutas_adjuntos) > 0:
+
+                            #este es el elemento de imagenes y videos
+                                    elementos[0].click()
+                                    print("se dio click en el elemento de imagenes")
+                                    keyboard.write(carpeta)
+                                    time.sleep(1)
+                                    keyboard.send("enter")  
+                                    ruta_archivo = rutas_adjuntos[0+i]  # Cambia esto con la ruta de tu archivo
+                                    keyboard.write(ruta_archivo)
+                                    time.sleep(1)
+                                    keyboard.send("enter")
+                                    time.sleep(2)
+                                    mensaje = lista_de_mensajes[0+i]
+                                    keyboard.write(mensaje)
+                                    keyboard.send("enter")
+                                else:
+                                    elementos[1].click()
+                                    print("se dio click en el elemento de imagenes")
+                                    keyboard.write(carpeta)
+                                    time.sleep(1)
+                                    keyboard.send("enter")  
+                                    ruta_archivo = rutas_imagenes[0+i]   # Cambia esto con la ruta de tu archivo
+                                    keyboard.write(ruta_archivo)
+                                    time.sleep(1)
+                                    keyboard.send("enter")
+                                    time.sleep(2)
+                                    mensaje = lista_de_mensajes[0+i]
+                                    keyboard.write(mensaje)
+                                    keyboard.send("enter")
                     
                     
                     
                 elif index ==5:
                     
                     
-                    elemento = WebDriverWait(driver, 1000).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, "._3ndVb.fbgy3m38.ft2m32mm.oq31bsqd.nu34rnf1[title='Nuevo chat']"))
-                    )
-                    print("Este es el primer controlador")
-                    time.sleep(1)
-                    elemento.click()
-                    time.sleep(5)
-                    campo_texto = WebDriverWait(driver, 1000).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, ".selectable-text.copyable-text.iq0m558w.g0rxnol2"))
-                    )
-                    texto_a_ingresar = sublistas[4[i]]
-                    campo_texto.send_keys(texto_a_ingresar)
-                    print(923984)
-                    elemento = WebDriverWait(driver, 1000).until(
-                    EC.element_to_be_clickable((By.CSS_SELECTOR, "._21S-L > .cw3vfol9"))
-                    )
-                    elemento.click()
+                    if primera_iteracion5:
 
-                
-                
-                
-                    print("porfin")
-                
-                
-                
-                    mensaje_a_enviar = WebDriverWait(driver, 1000).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, "._3Uu1_"))
-                    )
-                    texto = "Hola"
-                    print("polisha")
-                    mensaje_a_enviar.send_keys(texto)
-                    botonenviar = WebDriverWait(driver, 1000).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, "._3XKXx"))
-                    )
-                    botonenviar.click()
+                        print("esperando 60 segundos")
+                        time.sleep(60)
+                        print("buscando boton nuevo chat")
+                        botonnuevochar = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "._ajv7:nth-child(4) > ._ajv6 > span"))
+                        )
+                        botonnuevochar.click()
+                        time.sleep(2)
+                        primera_lista = sublistas[4]
+                        print(primera_lista)
+                        print("se mandaran a estos numeros")
+                        objeto = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, ".\_ai07 .selectable-text"))
+                        )
+                    
+                        objeto.send_keys(primera_lista[i])
+                        print("se mando a buscar el contacto")
 
-                
-                
-                
-                print("porfin")
-                
-                
-                
-                mensaje_a_enviar = WebDriverWait(driver, 1000).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, "._3Uu1_"))
-                )
-                texto = lista_de_mensajes[i+5]
-                print("polisha")
-                mensaje_a_enviar.send_keys(texto)
-                botonenviar = WebDriverWait(driver, 1000).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, "._3XKXx"))
-                )
-                botonenviar.click()
+                    
+
+                        nuevochat = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "._ak72:nth-child(2) > ._ak8l"))
+                        )
+                        nuevochat.click()
+                        time.sleep(2)
+                        print("se enconbtro el contacto y se dio click e el")
+                        parent_element = WebDriverWait(driver, 100).until(
+                            EC.presence_of_element_located((By.CSS_SELECTOR, "._ak1o ._ajv6"))
+                            )
+                        parent_element.click()
+                        elementos = driver.find_elements(By.XPATH, "//div[contains(@class, 'x1i64zmx') and contains(@class, 'x1emribx')]")
+                        if len(elementos) >= 2:
+                                print("jijijijaja")
+                                if len(rutas_adjuntos) > 0:
+
+                        #este es el elemento de imagenes y videos
+                                    elementos[0].click()
+                                    print("se dio click en el elemento de imagenes")
+                                    keyboard.write(carpeta)
+                                    time.sleep(1)
+                                    keyboard.send("enter")  
+                                    ruta_archivo = rutas_adjuntos[0+i]  # Cambia esto con la ruta de tu archivo
+                                    keyboard.write(ruta_archivo)
+                                    time.sleep(1)
+                                    keyboard.send("enter")
+                                    time.sleep(2)
+                                    mensaje = lista_de_mensajes[0+i]
+                                    keyboard.write(mensaje)
+                                    keyboard.send("enter")
+                                else:
+                                    elementos[1].click()
+                                    print("se dio click en el elemento de imagenes")
+                                    time.sleep(2)
+                                    print("creo que aqui esta el error")
+                                    keyboard.write(carpeta)
+                                    time.sleep(1)
+                                    keyboard.send("enter")  
+                                    ruta_archivo = rutas_imagenes[0+i]   # Cambia esto con la ruta de tu archivo
+                                    keyboard.write(ruta_archivo)
+                                    time.sleep(1)
+                                    keyboard.send("enter")
+                                    time.sleep(2)
+                                    mensaje = lista_de_mensajes[0+i]
+                                    keyboard.write(mensaje)
+                                    keyboard.send("enter")
+                                    primera_iteracion5 = False
+                    else:
+                        print("esperando 5 segundos")
+                        time.sleep(5)
+                        print("buscando boton nuevo chat")
+                        botonnuevochar = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "._ajv7:nth-child(4) > ._ajv6 > span"))
+                        )
+                        botonnuevochar.click()
+                        time.sleep(2)
+                        primera_lista = sublistas[4]
+                        print(primera_lista)
+                        print("se mandaran a estos numeros")
+                        objeto = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, ".\_ai07 .selectable-text"))
+                        )
+                        
+                        objeto.send_keys(primera_lista[i])
+                        print("se mando a buscar el contacto")
+
+                    
+
+                        nuevochat = WebDriverWait(driver, 1000).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "._ak72:nth-child(2) > ._ak8l"))
+                        )
+                        nuevochat.click()
+                        time.sleep(2)
+                        print("se enconbtro el contacto y se dio click e el")
+                        parent_element = WebDriverWait(driver, 100).until(
+                            EC.presence_of_element_located((By.CSS_SELECTOR, "._ak1o ._ajv6"))
+                            )
+                        parent_element.click()
+                        elementos = driver.find_elements(By.XPATH, "//div[contains(@class, 'x1i64zmx') and contains(@class, 'x1emribx')]")
+                        if len(elementos) >= 2:
+                                print("jijijijaja")
+                                if len(rutas_adjuntos) > 0:
+
+                            #este es el elemento de imagenes y videos
+                                    elementos[0].click()
+                                    print("se dio click en el elemento de imagenes")
+                                    keyboard.write(carpeta)
+                                    time.sleep(1)
+                                    keyboard.send("enter")  
+                                    ruta_archivo = rutas_adjuntos[0+i]  # Cambia esto con la ruta de tu archivo
+                                    keyboard.write(ruta_archivo)
+                                    time.sleep(1)
+                                    keyboard.send("enter")
+                                    time.sleep(2)
+                                    mensaje = lista_de_mensajes[0+i]
+                                    keyboard.write(mensaje)
+                                    keyboard.send("enter")
+                                else:
+                                    elementos[1].click()
+                                    print("se dio click en el elemento de imagenes")
+                                    keyboard.write(carpeta)
+                                    time.sleep(1)
+                                    keyboard.send("enter")  
+                                    ruta_archivo = rutas_imagenes[0+i]   # Cambia esto con la ruta de tu archivo
+                                    keyboard.write(ruta_archivo)
+                                    time.sleep(1)
+                                    keyboard.send("enter")
+                                    time.sleep(2)
+                                    mensaje = lista_de_mensajes[0+i]
+                                    keyboard.write(mensaje)
+                                    keyboard.send("enter")
         # Aquí puedes realizar las acciones específicas para el tercer controlador
 
 # Recuerda cerrar los controladores cuando hayas terminado con ellos

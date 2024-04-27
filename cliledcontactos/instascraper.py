@@ -48,21 +48,24 @@ def main(username):
         lista = []
         for i in followers_list:
             usr = getUser(i['username'])
-            lista.append(usr)
-            print(usr)
-            print("run")
-            if usr.get('public_email', None) is not None and usr.get('public_email', None) != "":
-                temp = [
-                    usr.get("username", ""),
-                    usr.get("full_name", ""),
-                    usr.get("follower_count", ""),
-                    usr.get("public_email", ""),
-                    usr.get("public_phone_country_code", ""),
-                    usr.get("public_phone_number", ""),
-                    usr.get("whatsapp_number", ""),
-                ]
+            if usr is not None:
+                lista.append(usr)
+                print(usr)
+                print("run")
+                if usr.get('public_email', None) is not None and usr.get('public_email', None) != "":
+                    temp = [
+                        usr.get("username", ""),
+                        usr.get("full_name", ""),
+                        usr.get("follower_count", ""),
+                        usr.get("public_email", ""),
+                        usr.get("public_phone_country_code", ""),
+                        usr.get("public_phone_number", ""),
+                        usr.get("whatsapp_number", ""),
+                    ]
         print(lista)
-        return lista
+            
     else:
         print(f"Couldn't find user with username: {username}")
+    
+    return lista
 
